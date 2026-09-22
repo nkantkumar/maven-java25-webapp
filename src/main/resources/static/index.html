@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Java 25 Maven Web Application Dashboard featuring Virtual Threads, JVM Diagnostics, and Java 25 features.">
+    <title>Java 25 Maven Web Application</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="app-background"></div>
+    <div class="app-container">
+
+        <!-- Top Navigation Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="logo-badge">
+                    <span class="java-version">25</span>
+                </div>
+                <div class="brand-text">
+                    <h1>Java 25 Maven Web App</h1>
+                    <span class="subtitle">Apache Maven 3.9+ &bull; Spring Boot 3.4 &bull; Virtual Threads</span>
+                </div>
+            </div>
+            <div class="header-status">
+                <div class="status-pill green" id="statusPill">
+                    <span class="dot"></span>
+                    <span id="statusText">JVM 25 Active</span>
+                </div>
+                <button class="btn btn-secondary" id="btnRefreshJvm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                    Refresh
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Layout -->
+        <main class="dashboard-grid">
+
+            <!-- Hero Section: System & JVM Overview Card -->
+            <section class="card glass-card hero-card">
+                <div class="card-header">
+                    <h2><span class="icon">⚡</span> Java 25 Runtime Diagnostics</h2>
+                    <span class="badge badge-purple" id="badgeRuntime">OpenJDK 25</span>
+                </div>
+                <div class="card-body">
+                    <div class="metrics-grid">
+                        <div class="metric-box">
+                            <span class="metric-label">Java Version</span>
+                            <span class="metric-value highlight-cyan" id="jvmVersion">25.0.3</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-label">JVM Architecture</span>
+                            <span class="metric-value" id="jvmArch">aarch64</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-label">CPU Cores</span>
+                            <span class="metric-value" id="jvmProcessors">8 Cores</span>
+                        </div>
+                        <div class="metric-box">
+                            <span class="metric-label">Virtual Threads</span>
+                            <span class="metric-value highlight-green" id="jvmVirtualSupport">Enabled</span>
+                        </div>
+                    </div>
+
+                    <!-- Memory Usage Bar -->
+                    <div class="memory-container">
+                        <div class="memory-header">
+                            <span>Heap Memory Usage</span>
+                            <span id="memoryText">0 MB / 0 MB</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memoryFill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <div class="gc-tags" id="gcContainer">
+                        <span class="tag-label">Active Garbage Collectors:</span>
+                        <span class="gc-badge">G1 GC</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Virtual Threads Benchmark Card -->
+            <section class="card glass-card benchmark-card">
+                <div class="card-header">
+                    <h2><span class="icon">🚀</span> Virtual Threads Benchmark</h2>
+                    <span class="badge badge-green">High Concurrency</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-description">
+                        Simulate spawning thousands of concurrent lightweight tasks powered by Java 25 Virtual Threads (<code>Executors.newVirtualThreadPerTaskExecutor()</code>).
+                    </p>
+
+                    <form id="benchmarkForm" class="benchmark-form">
+                        <div class="form-group">
+                            <label for="taskCount">Concurrent Tasks</label>
+                            <input type="number" id="taskCount" value="5000" min="10" max="50000" step="500">
+                        </div>
+                        <div class="form-group">
+                            <label for="delayMs">Simulated I/O Delay (ms)</label>
+                            <input type="number" id="delayMs" value="50" min="1" max="1000">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="btnRunBenchmark">
+                            <span>Execute Benchmark</span>
+                        </button>
+                    </form>
+
+                    <!-- Benchmark Results Panel -->
+                    <div class="benchmark-results hidden" id="benchmarkResults">
+                        <div class="result-stats">
+                            <div class="stat-item">
+                                <span class="stat-num" id="resDuration">0 ms</span>
+                                <span class="stat-desc">Total Execution Time</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-num highlight-magenta" id="resThroughput">0</span>
+                                <span class="stat-desc">Tasks / Second</span>
+                            </div>
+                        </div>
+
+                        <div class="sample-tasks-title">Sample Virtual Thread Task Executions:</div>
+                        <div class="code-terminal" id="taskTerminal">
+                            <pre><code id="terminalContent">// Click 'Execute Benchmark' to view live Virtual Thread results...</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Java 25 Language Features Showcase Card -->
+            <section class="card glass-card features-card full-width">
+                <div class="card-header">
+                    <h2><span class="icon">🔮</span> Java 25 Language Features</h2>
+                    <span class="badge badge-blue">Interactive Inspector</span>
+                </div>
+                <div class="card-body">
+                    <div class="features-tabs" id="featuresTabs">
+                        <!-- Rendered by app.js -->
+                    </div>
+                    <div class="feature-display" id="featureDisplay">
+                        <!-- Rendered by app.js -->
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="app-footer">
+            <p>Sample Maven Web Application &bull; Built with Java 25, Apache Maven 3.9, & Spring Boot 3.4</p>
+        </footer>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>

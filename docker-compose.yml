@@ -1,0 +1,13 @@
+services:
+  maven-java25-webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: maven-java25-webapp:latest
+    container_name: maven-java25-webapp-container
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - JAVA_OPTS=-Dspring.classformat.ignore=true
+    restart: unless-stopped

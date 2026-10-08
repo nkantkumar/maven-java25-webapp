@@ -1,9 +1,10 @@
 target/
+**/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 # Frontend build outputs generated from frontend/
-src/main/resources/static/*
-!src/main/resources/static/.gitkeep
+bff/src/main/resources/static/*
+!bff/src/main/resources/static/.gitkeep
 
 ### IntelliJ IDEA ###
 .idea/

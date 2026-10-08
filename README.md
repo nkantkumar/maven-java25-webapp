@@ -7,7 +7,28 @@
 [![RxJS](https://img.shields.io/badge/RxJS-7.8-b7178c.svg)](https://rxjs.dev/)
 [![Docker Desktop](https://img.shields.io/badge/Docker-Desktop-blue.svg)](https://www.docker.com/products/docker-desktop/)
 
-A modern, high-performance web application powered by **Java 25 (OpenJDK)**, **Spring Boot 3.4**, and a reactive single-page frontend built with **React 19**, **Redux Toolkit**, and **RxJS 7**. The application is containerized using multi-stage builds and is ready to deploy directly to **Docker Desktop**.
+A modern, high-performance web application powered by **Java 25 (OpenJDK)**, **Spring Boot 3.4**, and a reactive single-page frontend built with **React 19**, **Redux Toolkit**, and **RxJS 7**. Organized clean architecture separating the **BFF (Backend For Frontend)** service and the **Frontend SPA**.
+
+---
+
+## 📂 Project Structure
+
+```
+maven-java25-webapp/
+├── bff/                         # Backend For Frontend (Spring Boot 3.4 & Java 25)
+│   ├── pom.xml                  # Maven module configuration
+│   └── src/
+│       ├── main/java/           # Java 25 controllers, services, models
+│       └── main/resources/      # Static web assets target folder (.gitkeep)
+├── frontend/                    # Frontend SPA (React 19, Redux Toolkit, RxJS 7)
+│   ├── package.json             # npm dependencies and scripts
+│   ├── vite.config.js           # Vite config with API proxying & build targets
+│   └── src/                     # React components, Redux slices, RxJS streams
+├── Dockerfile                   # Multi-stage Docker build for local Docker Desktop
+├── docker-compose.yml           # Docker Compose execution manifest
+├── pom.xml                      # Parent root Maven POM aggregator
+└── README.md                    # Project documentation
+```
 
 ---
 
@@ -15,7 +36,7 @@ A modern, high-performance web application powered by **Java 25 (OpenJDK)**, **S
 
 - **⚡ Java 25 Virtual Threads & Runtime Diagnostics**: Live inspection of JVM version, CPU cores, active Garbage Collectors, heap memory usage, and Virtual Threads execution status (`Executors.newVirtualThreadPerTaskExecutor()`).
 - **🚀 Concurrency Benchmark**: Interactive benchmark tool simulating thousands of concurrent lightweight virtual thread tasks with customizable I/O delay and live throughput calculations.
-- **🔮 Interactive Java 25 Feature Inspector**: Live runtime evaluation and code view of cutting-edge Java 25 feature proposals (Structured Concurrency, Flexible Constructor Bodies, Primitive Types in Patterns, Implicitly Declared Classes, Compact Number Formatting).
+- **🔮 Interactive Java 25 Feature Inspector**: Live runtime evaluation and code view of cutting-edge Java 25 feature proposals (Structured Concurrency, Flexible Constructor Bodies, Pattern Matching).
 - **⚛️ React 19 + Redux Toolkit + RxJS 7 Architecture**:
   - **React 19**: Modern UI component layout with glassmorphism visual styling, dark mode theme, progress indicators, and interactive code terminals.
   - **Redux Toolkit**: Centralized state management across modular slices (`jvmSlice`, `featuresSlice`, `benchmarkSlice`, `reactiveSlice`).
@@ -24,73 +45,15 @@ A modern, high-performance web application powered by **Java 25 (OpenJDK)**, **S
 
 ---
 
-## 🏗️ Architecture & Technology Stack
-
-```
-           +-------------------------------------------------------------+
-           |                 React 19 Dashboard UI                       |
-           +------------------------------+------------------------------+
-                                          |
-                        +-----------------+-----------------+
-                        |                                   |
-              +---------v----------+              +---------v----------+
-              | Redux Toolkit      |              | RxJS 7 Observables |
-              | State Slices       |<-------------| Event Streams      |
-              +---------+----------+              +---------+----------+
-                        |                                   |
-                        +-----------------+-----------------+
-                                          | REST API (JSON)
-                                          v
-           +-------------------------------------------------------------+
-           |                 Spring Boot 3.4 Backend                       |
-           |             DashboardApiController (/api/*)                 |
-           +------------------------------+------------------------------+
-                                          |
-                                 +--------v--------+
-                                 | OpenJDK JVM 25  |
-                                 | Virtual Threads |
-                                 +-----------------+
-```
-
-### Backend (Java 25 & Spring Boot 3.4)
-- **Language**: Java 25 (OpenJDK)
-- **Framework**: Spring Boot 3.4.3 (`spring-boot-starter-web`, `spring-boot-starter-actuator`)
-- **Build Tool**: Apache Maven 3.9+
-
-### Frontend (React + Redux + RxJS)
-- **UI Library**: React 19
-- **State Management**: Redux Toolkit 2.6 (`@reduxjs/toolkit`, `react-redux`)
-- **Reactive Streams**: RxJS 7.8 (`BehaviorSubject`, `Subject`, `switchMap`, `timer`, `catchError`)
-- **Icons & Typography**: Lucide React, Plus Jakarta Sans, JetBrains Mono
-- **Bundler**: Vite 6
-
----
-
 ## 📡 REST API Reference
 
-The backend exposes the following REST API endpoints:
+The BFF backend exposes the following REST API endpoints:
 
 | HTTP Method | Endpoint | Description | Query Parameters | Response |
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/api/jvm` | Fetches live JVM diagnostics and runtime statistics | None | `JvmInfo` JSON |
 | `GET` | `/api/features` | Returns interactive Java 25 language feature demos | None | `List<FeatureDemoResult>` JSON |
 | `POST` | `/api/benchmark/virtual-threads` | Runs high-concurrency Virtual Thread benchmark | `taskCount` (default: 1000), `delayMs` (default: 20) | Benchmark execution metrics JSON |
-
-### Sample `GET /api/jvm` Response
-```json
-{
-  "javaVersion": "25.0.3",
-  "javaVendor": "Temurin",
-  "osName": "Mac OS X",
-  "osArch": "aarch64",
-  "availableProcessors": 8,
-  "usedMemoryMb": 54,
-  "totalMemoryMb": 128,
-  "maxMemoryMb": 4096,
-  "isVirtualThreadSupportActive": true,
-  "activeGarbageCollectors": ["G1 Young Generation", "G1 Old Generation"]
-}
-```
 
 ---
 
@@ -107,23 +70,21 @@ The backend exposes the following REST API endpoints:
    ```bash
    cd maven-java25-webapp
    ```
-2. Build the entire application (frontend + backend JAR):
+2. Build the entire application (frontend + BFF JAR):
    ```bash
    mvn clean package
    ```
-   *Note: Maven will automatically run `npm install` and `npm run build` inside `frontend/` via `exec-maven-plugin` and copy the bundled static assets into `src/main/resources/static`.*
-
-3. Run the Spring Boot JAR:
+3. Run the Spring Boot BFF JAR:
    ```bash
-   java -Dspring.classformat.ignore=true -jar target/maven-java25-webapp-1.0.0-SNAPSHOT.jar
+   java -Dspring.classformat.ignore=true -jar bff/target/bff-1.0.0-SNAPSHOT.jar
    ```
 4. Access the React dashboard in your browser at `http://localhost:8080`.
 
 ### Option 2: Standalone Frontend Development Server
 For rapid React frontend iteration with Hot Module Replacement (HMR):
-1. Start the Spring Boot backend on port 8080:
+1. Start the Spring Boot BFF backend on port 8080:
    ```bash
-   mvn spring-boot:run
+   mvn spring-boot:run -pl bff
    ```
 2. In a separate terminal window, start Vite dev server:
    ```bash
@@ -159,10 +120,6 @@ The application includes a multi-stage `Dockerfile` and `docker-compose.yml` opt
 2. Run the container:
    ```bash
    docker run -d -p 8080:8080 --name java25-app maven-java25-webapp:latest
-   ```
-3. Check container logs:
-   ```bash
-   docker logs -f java25-app
    ```
 
 ---
